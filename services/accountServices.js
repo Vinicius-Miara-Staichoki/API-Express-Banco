@@ -3,9 +3,14 @@ import Account from "../models/accountModel.js";
 
 
 
+let numberAccount = 10001;
+
+
 
 const createAccount = async (data) => {
-    const { userID, accountNumber, agency, type, balance, limit, updatedDate } = data;
+   
+    const { userID, agency, type, balance,limit, updatedDate } = data;
+
     const user = await User.findById(userID);
 
     if (!user) {
@@ -21,6 +26,11 @@ const createAccount = async (data) => {
 
     }
 
+    numberAccount++;
+    
+
+
+
 
 
     return Account.create({ userID, accountNumber: numberAccount, agency, type, balance, limit, updatedDate });
@@ -31,14 +41,35 @@ const createAccount = async (data) => {
 }
 
 
+
 const listAccounts = async (data) => {
-    return Account.find();
+    const active = await Account.find({ active: true });
+    const desactive = await Account.find({ active: false });
+
+    const unlock = await Account.find({ blocked: false });
+    const blocked = await Account.find({ blocked: true });
+
+    return {
+        active,
+        desactive,
+        unlock,
+        blocked
+    }
+
+
 }
 
 const getAccountByID = async (accountID) => {
 
-    const accountByID = Account.findById(accountID);
-    return accountByID;
+    const account = Account.findById(accountID);
+
+    if (!account) {
+        const error = new Error("Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return account;
 
 }
 
@@ -46,6 +77,12 @@ const getAccountByID = async (accountID) => {
 const getAccountByNumber = async (accountNumber) => {
 
     const accountByNumber = Account.findOne({ accountNumber })
+
+    if (!accountByNumber) {
+        const error = new Error("Account doesnt exist");
+        error.statusCode = 404;
+        throw error;
+    }
     return accountByNumber;
 
 
@@ -54,6 +91,14 @@ const getAccountByNumber = async (accountNumber) => {
 const getBalanceAccount = async (id) => {
 
     const accountBalance = await Account.findById(id);
+
+    if (!accountBalance) {
+        const error = new Error("Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
+
 
     return accountBalance;
 }

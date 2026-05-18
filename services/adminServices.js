@@ -3,6 +3,16 @@ import Account from "../models/accountModel.js";
 import Transaction from "../models/transactionModel.js";
 
 const deactivateUser = async (id) => {
+    const account = await Account.countDocuments({
+        userID: id,
+        balance: { $gte: 0 }
+    })
+    if (account > 0) {
+        const error = new Error("User who has accounts with positive balance cannot be deactivated");
+        error.statusCode = 400;
+        throw error;
+
+    }
 
     const user = await User.findByIdAndUpdate(id,
         { active: false },
@@ -33,6 +43,18 @@ const listDeactiveUsers = async (desactive) => {
 }
 
 const deactivateAccount = async (id) => {
+    const acccount = await Account.findById(id);
+    if(!acccount){
+        const error = new Error("Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if(acccount.balance !== 0){
+        const error = new Error("Account still have balance");
+        error.statusCode = 400;
+        throw error;
+    }
 
     const account = await Account.findByIdAndUpdate(id,
         { active: false },
@@ -63,18 +85,45 @@ const listDeactiveAccounts = async (desactive) => {
 }
 
 const blockAccount = async (id) => {
+    const acccount = await Account.findById(id);
+    if(acccount.blocked === true){
+        const error = new Error("Account has already blocked");
+        error.statusCode = 400;
+        throw error;
+    }
     const account = await Account.findByIdAndUpdate(id,
         { blocked: true },
         { new: true }
     );
+
+    if (!account) {
+        const error = new Error("Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
+   
+
+
     return account
-}  
+}
 
 const unlockAccount = async (id) => {
+    const acccount = await Account.findById(id);
+    if(acccount.blocked === false){
+        const error = new Error("Account has already been unlocked");
+        error.statusCode = 400;
+        throw error;
+    }
     const account = await Account.findByIdAndUpdate(id,
         { blocked: false },
         { new: true }
     );
+    if(!account){
+        const error = new Error("Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
     return account
 }
 
@@ -273,14 +322,14 @@ const accountsWithNegativeBalance = async () => {
 }
 
 const mostBalance = async (limit) => {
-    const balance = await Account.find({balance:{$lte:Number(limit)}})
-    .sort({balance:-1})
+    const balance = await Account.find({ balance: { $lte: Number(limit) } })
+        .sort({ balance: -1 })
 
-    
-   
+
+
 
     return balance
-      
+
 }
 
 

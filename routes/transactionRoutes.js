@@ -4,6 +4,8 @@ import transactionController from "../controllers/transactionController.js"
 const router = express.Router();
 
 
+
+
 router.get("/",transactionController.listTransactions);
 router.get("/:type",transactionController.listTransactionByType);
 
@@ -20,10 +22,10 @@ router.post("/:id/monthly-fee",transactionController.monthlyFee);
 router.post("/:id/:targetId/transfer",transactionController.createTransfer);
 
 
-router.get("/:id",transactionController.getTransactionById);
+router.get("/:id/id",transactionController.getTransactionById);
 
 
-router.get("/:id/statement",transactionController.listTransactionsByUser);             
+router.get("/:id/statement",transactionController.listTransactionsByAccount);             
 
 
 

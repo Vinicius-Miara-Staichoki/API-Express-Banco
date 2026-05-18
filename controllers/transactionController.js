@@ -11,7 +11,7 @@ const createDeposit = async (req, res, next) => {
 
         res.status(201).json(transaction);
     } catch (error) {
-        next(error);           
+        next(error);
     }
 }
 
@@ -46,9 +46,9 @@ const createTransfer = async (req, res, next) => {
 
 }
 
-const listTransactionsByUser = async (req, res, next) => {
+const listTransactionsByAccount = async (req, res, next) => {
     try {
-        const list = await transactionServices.listTransactionsByUser(
+        const list = await transactionServices.listTransactionsByAccount(
             req.params.id,
         )
         res.json({ list });
@@ -105,7 +105,7 @@ const getTransactionByValue = async (req, res, next) => {
 const getTransactionsByYear = async (req, res, next) => {
     try {
         const year = await transactionServices.getTransactionsByYear(req.params.year)
-        res.json({ year }) 
+        res.json({ year })
 
     } catch (error) {
         next(error);
@@ -132,7 +132,7 @@ export default {
     createDeposit,
     createWithdraw,
     createTransfer,
-    listTransactionsByUser,
+    listTransactionsByAccount,
     listTransactions,
     getTransactionById,
     listTransactionByType,

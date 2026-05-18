@@ -151,21 +151,21 @@ const createTransfer = async (id, targetId, data, targetData) => {
         throw error;
     }
 
-   if(account.type === "corrente"){
-    if(account.balance+ account.limit <value){
-        const error = new Error("Dont have enough balance ");
-        error.statusCode = 400;
-        throw error;    
+    if (account.type === "corrente") {
+        if (account.balance + account.limit < value) {
+            const error = new Error("Dont have enough balance ");
+            error.statusCode = 400;
+            throw error;
+        }
     }
-   }
 
-   if(account.type === "poupança"){
-    if(account.balance<value){
-        const error = new Error("Dont have enough balance ");
-        error.statusCode = 400;
-        throw error;    
+    if (account.type === "poupança") {
+        if (account.balance < value) {
+            const error = new Error("Dont have enough balance ");
+            error.statusCode = 400;
+            throw error;
+        }
     }
-   }
 
     account.balance -= Number(value);
     await account.save();
@@ -184,13 +184,29 @@ const createTransfer = async (id, targetId, data, targetData) => {
 
 }
 
-const listTransactionsByUser = async (accountId) => {
-    const a = await Transaction.find({ accountID: accountId });
-    const b = await Transaction.find({ targetAccountID: accountId });
+const listTransactionsByAccount = async (accountId) => {
+    const account = await Account.findById(accountId);
+    const transactionSend = await Transaction.find({ accountID: accountId });
+
+    const transactionsReceived = await Transaction.find({ targetAccountID: accountId });
+
+    if (!account) {
+        const error = new Error("Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
+
+
+
+
+
 
     return {
-        a,
-        b
+        transactionSend,
+        transactionsReceived
+
+
     }
 
 
@@ -202,11 +218,24 @@ const listTransactions = async (a) => {
 
 const getTransactionById = async (id) => {
     const transaction = await Transaction.findById(id);
+
+    if (!transaction) {
+        const error = new Error("Transaction doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
     return transaction;
 }
 
 const listTransactionByType = async (type) => {
     const transactions = await Transaction.find({ type: type });
+
+    if (!transactions) {
+        const error = new Error("Doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
     return transactions;
 
 }
@@ -217,6 +246,11 @@ const getTransactionByValue = async (min, max) => {
 };
 
 const getTransactionsByYear = async (year) => {
+    if (year === String) {
+        const error = new Error("year invalid");
+        error.statusCode = 400;
+        throw error;
+    }
     const startDate = new Date(year, 0, 1, 0, 0, 0);
     const endDate = new Date(year, 11, 31, 23, 59, 59);
 
@@ -233,6 +267,30 @@ const getTransactionsByYear = async (year) => {
 
 const monthlyFee = async (id) => {
     const account = await Account.findById(id)
+
+    if (!account) {
+        const error = new Error(" Account doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if(account.active === false){
+        const error = new Error (" Account has been desativated");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if(account.blocked === true){
+        const error = new Error("Account blocked");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if(account.balance + account.limit < 25){
+        const error = new Error("Account doesnt have enough balance");
+        error.statusCode = 400;
+        throw error;
+    }
 
 
 
@@ -267,7 +325,7 @@ export default {
     createDeposit,
     createWithdraw,
     createTransfer,
-    listTransactionsByUser,
+    listTransactionsByAccount,
     listTransactions,
     getTransactionById,
     listTransactionByType,

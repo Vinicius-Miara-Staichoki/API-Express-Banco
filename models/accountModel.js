@@ -45,7 +45,7 @@ const AccountSchema = new mongoose.Schema(
         limit: {
             type: Number,
             trim: true,
-            default: 0
+            default: 0  
         },
 
         active: {
