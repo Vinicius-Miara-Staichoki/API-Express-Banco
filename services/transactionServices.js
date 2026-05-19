@@ -186,9 +186,13 @@ const createTransfer = async (id, targetId, data, targetData) => {
 
 const listTransactionsByAccount = async (accountId) => {
     const account = await Account.findById(accountId);
-    const transactionSend = await Transaction.find({ accountID: accountId });
+    const transactionSend = (await Transaction.find({ accountID: accountId })).sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+    );
 
-    const transactionsReceived = await Transaction.find({ targetAccountID: accountId });
+    const transactionsReceived = (await Transaction.find({ targetAccountID: accountId })).sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+    );
 
     if (!account) {
         const error = new Error("Account doesnt exists");
@@ -197,12 +201,7 @@ const listTransactionsByAccount = async (accountId) => {
     }
 
 
-
-
-
-
-
-    return {
+    return {  
         transactionSend,
         transactionsReceived
 
@@ -212,9 +211,15 @@ const listTransactionsByAccount = async (accountId) => {
 
 }
 
-const listTransactions = async (a) => {
-    return Transaction.find();
-}
+
+
+
+
+const listTransactions = async () => {
+    return (await Transaction.find()).sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+    )
+}   
 
 const getTransactionById = async (id) => {
     const transaction = await Transaction.findById(id);

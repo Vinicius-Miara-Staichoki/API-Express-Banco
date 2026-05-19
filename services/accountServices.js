@@ -3,13 +3,15 @@ import Account from "../models/accountModel.js";
 
 
 
-let numberAccount = 10001;
+
 
 
 
 const createAccount = async (data) => {
-   
-    const { userID, agency, type, balance,limit, updatedDate } = data;
+
+
+
+    const { userID, agency, type, balance, limit, updatedDate } = data;
 
     const user = await User.findById(userID);
 
@@ -26,8 +28,16 @@ const createAccount = async (data) => {
 
     }
 
-    numberAccount++;
-    
+    if (type === "poupança" && limit > 0) {
+        const error = new Error("Poupança limit need to be 0");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const lastAccount = await Account.findOne().sort({ accountNumber: -1 });
+    const numberAccount = lastAccount ? lastAccount.accountNumber + 1 : 1;
+
+
 
 
 

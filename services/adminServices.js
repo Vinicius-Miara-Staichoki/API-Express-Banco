@@ -44,13 +44,13 @@ const listDeactiveUsers = async (desactive) => {
 
 const deactivateAccount = async (id) => {
     const acccount = await Account.findById(id);
-    if(!acccount){
+    if (!acccount) {
         const error = new Error("Account doesnt exists");
         error.statusCode = 404;
         throw error;
     }
 
-    if(acccount.balance !== 0){
+    if (acccount.balance !== 0) {
         const error = new Error("Account still have balance");
         error.statusCode = 400;
         throw error;
@@ -86,7 +86,7 @@ const listDeactiveAccounts = async (desactive) => {
 
 const blockAccount = async (id) => {
     const acccount = await Account.findById(id);
-    if(acccount.blocked === true){
+    if (acccount.blocked === true) {
         const error = new Error("Account has already blocked");
         error.statusCode = 400;
         throw error;
@@ -102,7 +102,7 @@ const blockAccount = async (id) => {
         throw error;
     }
 
-   
+
 
 
     return account
@@ -110,7 +110,7 @@ const blockAccount = async (id) => {
 
 const unlockAccount = async (id) => {
     const acccount = await Account.findById(id);
-    if(acccount.blocked === false){
+    if (acccount.blocked === false) {
         const error = new Error("Account has already been unlocked");
         error.statusCode = 400;
         throw error;
@@ -119,7 +119,7 @@ const unlockAccount = async (id) => {
         { blocked: false },
         { new: true }
     );
-    if(!account){
+    if (!account) {
         const error = new Error("Account doesnt exists");
         error.statusCode = 404;
         throw error;
@@ -134,9 +134,23 @@ const refundTransaction = async (id) => {
 
     const account = await Account.findById(transaction.accountID);
 
-    // fazer o if pro tipo da transação que nao podem dai coloca um else nas que podem pra ficar massa
+    if (!transaction) {
+        const error = new Error("Transaction doesnt exists");
+        error.statusCode = 404;
+        throw error;
+    }
 
-    //colocar o if tbm que ela nao pode estar cancelada
+    if (transaction.type === "tranferencia") {
+        const error = new Error("Cannot refund transfers");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (transaction.status === "canceled") {
+        const error = new Error("Cannot refund canceled transactions");
+        error.statusCode = 400;
+        throw error;
+    }
 
 
 

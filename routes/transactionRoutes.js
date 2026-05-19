@@ -25,7 +25,7 @@ router.post("/:id/:targetId/transfer",transactionController.createTransfer);
 router.get("/:id/id",transactionController.getTransactionById);
 
 
-router.get("/:id/statement",transactionController.listTransactionsByAccount);             
+router.get("/:id/statement",transactionController.listTransactionsByAccount);                  
 
 
 
