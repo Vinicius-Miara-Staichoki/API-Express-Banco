@@ -9,7 +9,36 @@ const createUser = async (req, res, next) => {
         next(error);
     }
 
+}  
+
+const getMe = async (req, res, next) => {
+    try {
+        res.status(200).json({
+            message: "Usuário logado encontrado",
+            data: req.user,
+        })
+
+    } catch (error) {
+        next(error);
+
+    }
 }
+
+const updateMe = async (req, res, next) => {
+    try {
+        const user = await userService.updateMe(req.user._id,req.body);
+        res.status(200).json({
+            message:"Perfil atualizado com sucesso",
+            data: user,
+
+        });
+
+    }catch(error){
+        next(error);
+    }
+}
+
+
 
 const listUsers = async (req, res, next) => {
     try {
@@ -33,7 +62,7 @@ const getUserByID = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
     try {
-        const userUpdate = await userService.updateUser(req.params.id,
+        const userUpdate = await userService.updateUser(req.user._id,
             req.body)
 
         res.json({ userUpdate });
@@ -76,10 +105,10 @@ const getUserByEmail = async (req, res, next) => {
 }
 
 const getAccountsByUser = async (req, res, next) => {
-    try{
+    try {
         const accounts = await userService.getAccountsByUser(req.params.id);
-        res.json({accounts});
-    }catch(error){
+        res.json({ accounts });
+    } catch (error) {
         next(error);
     }
 
@@ -96,6 +125,8 @@ export default {
     getUserByCPF,
     getUserByEmail,
     getAccountsByUser,
+    getMe,
+    updateMe,
 
 
 

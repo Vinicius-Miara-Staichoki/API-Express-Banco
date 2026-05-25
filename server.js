@@ -4,7 +4,8 @@ import ConnectDB from "./config/db.js"
 import userRoutes from "./routes/userRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import transactionRoutes from "./routes/transactionRoutes.js"
+import transactionRoutes from "./routes/transactionRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 
 
@@ -19,10 +20,13 @@ app.get("/", async (req, res) => {
 
 });
 
-app.use("/users",userRoutes)
-app.use("/accounts",accountRoutes)
-app.use("/admin",adminRoutes)
-app.use("/transactions",transactionRoutes)
+app.use("/auth", authRoutes);  // autenticação 
+
+
+app.use("/users", userRoutes)
+app.use("/accounts", accountRoutes)
+app.use("/admin", adminRoutes)
+app.use("/transactions", transactionRoutes)
 
 
 
@@ -37,8 +41,8 @@ const startServer = async () => {
 
 
         })
-    }catch(error){
-        console.log("Erro ao iniciar o servidor: ",error.message)
+    } catch (error) {
+        console.log("Erro ao iniciar o servidor: ", error.message)
     }
 
 }

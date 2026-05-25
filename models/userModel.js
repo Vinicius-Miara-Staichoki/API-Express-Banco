@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema(
 
         age: {
             type: Number,
-             min: 18, 
+            min: 18,
             required: true,
             trim: true,
 
@@ -41,23 +41,36 @@ const UserSchema = new mongoose.Schema(
 
         active: {
             type: String,
-          
+
             trim: true,
-            default: true, 
+            default: true,
         },
-        
+
         date: {
             type: Date,
             default: Date.now,
 
 
+        },  
+        
+// autenticação 
+        password: {
+            type: String,
+            required: true,
+            select: false,
+        },
+
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user",
         }
     },
 
-    
-        {
+
+    {
         collection: "userModel",
-        
+
     }
 
 );

@@ -1,6 +1,44 @@
 import User from "../models/userModel.js";
 import Account from "../models/accountModel.js";
 
+
+
+
+const updateMe = async (userId, data) => {
+
+    delete data.role; // se vier o role não vai pro usuario; 
+    delete data.active;
+    delete data.password;
+  
+    if (data.email) {
+        const emailExists = await User.findOne({
+            email: data.email,
+            _id: { $ne: userId }  // ne = not equal (emailExist sem contar a minha conta);
+        });
+
+        if (emailExists) {
+            throw new Error("Já existe um usuário com esse email");
+
+
+        }
+    }
+
+    const user = await User.findByIdAndUpdate(userId, data, {
+        new: true,
+        runValidators: true
+    }
+    )
+
+    if (!user) {
+        throw new Error("Usuário não encontrado")
+    }
+
+    return user;
+
+}
+
+
+
 const createUser = async (dataUser) => {
     const { name, cpf, email, number, age } = dataUser
     return User.create({ name, cpf, email, number, age })
@@ -128,6 +166,7 @@ export default {
     getUserByCPF,
     getUserByEmail,
     getAccountsByUser,
+    updateMe,
 
 
 
