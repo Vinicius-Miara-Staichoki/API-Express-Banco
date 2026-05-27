@@ -1,5 +1,5 @@
 import accountServices from "../services/accountServices.js";
-  
+
 const createAccount = async (req, res, next) => {
   try {
     const accounteCreate = await accountServices.createAccount(req.body)
@@ -16,7 +16,7 @@ const listAccounts = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}  
+}
 
 const getAccountByID = async (req, res, next) => {
   try {
@@ -41,7 +41,16 @@ const getAccountByNumber = async (req, res, next) => {
 
 const getBalanceAccount = async (req, res, next) => {
   try {
-    const account = await accountServices.getBalanceAccount(req.params.id);
+    let account = a;
+
+    if (user.role === "user") {
+      account = await accountServices.getBalanceAccount(req.account._id);
+
+    }
+    if (user.role === "admin") {
+
+      account = await accountServices.getBalanceAccount(req.params.id);
+    }
 
 
     res.json({ Balance: account.balance, limit: account.limit, availableBalance: account.balance + account.limit })
@@ -61,7 +70,7 @@ export default {
   getAccountByID,
   getAccountByNumber,
   getBalanceAccount,
- 
+
 
 
 

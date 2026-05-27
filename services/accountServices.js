@@ -10,7 +10,7 @@ import Account from "../models/accountModel.js";
 const createAccount = async (data) => {
 
 
-
+  
     const { userID, agency, type, balance, limit, updatedDate } = data;
 
     const user = await User.findById(userID);

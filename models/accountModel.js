@@ -31,7 +31,7 @@ const AccountSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
-            lowercase: true, 
+            lowercase: true,   
             enum: ["corrente", "poupança"] 
         },
 
