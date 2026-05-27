@@ -32,7 +32,7 @@ router.get("/email/:email", authMiddleware, adminMiddleware, userController.getU
 
 // especiais(possuem ID)
 router.get("/:id/getUserByID", authMiddleware, adminMiddleware, userController.getUserByID);
-router.get("/:id/accounts", authMiddleware, adminMiddleware, userController.getAccountsByUser);
+router.get("/:id/accounts", authMiddleware, userController.getAccountsByUser);
 router.put("/updateUser", authMiddleware, userController.updateUser);
 router.delete("/:id", authMiddleware, adminMiddleware, userController.deletUser);
 

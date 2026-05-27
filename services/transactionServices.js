@@ -9,7 +9,7 @@ const createDeposit = async (id, data) => {
         const error = new Error("Account not exists");
         error.statusCode = 404;
         throw error;
-    }
+    }  
 
     if (account.active === false) {
         const error = new Error("account deactivated cannot deposit");

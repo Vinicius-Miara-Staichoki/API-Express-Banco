@@ -51,7 +51,7 @@ const register = async (data) => {
 }
 
 const login = async (data) => {
-    const { email, password } = data;
+    const { email, password} = data;
   
     if (!email || !password) {
       const error = new Error("Email e senha são obrigatórios");
@@ -91,6 +91,8 @@ const login = async (data) => {
         expiresIn: process.env.JWT_EXPIRES_IN || "1d",
       }
     );
+
+    
   
     return {
       user: {
@@ -102,6 +104,8 @@ const login = async (data) => {
         ativo: user.ativo,
       },
       token,
+  
+
     };
   };
 

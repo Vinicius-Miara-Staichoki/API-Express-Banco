@@ -41,17 +41,8 @@ const getAccountByNumber = async (req, res, next) => {
 
 const getBalanceAccount = async (req, res, next) => {
   try {
-    let account = a;
 
-    if (user.role === "user") {
-      account = await accountServices.getBalanceAccount(req.account._id);
-
-    }
-    if (user.role === "admin") {
-
-      account = await accountServices.getBalanceAccount(req.params.id);
-    }
-
+    const account = await accountServices.getBalanceAccount(req.params.id);
 
     res.json({ Balance: account.balance, limit: account.limit, availableBalance: account.balance + account.limit })
 

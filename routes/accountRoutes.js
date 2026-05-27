@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/", authMiddleware, adminMiddleware, accountControllers.createAccount);
 router.get("/", authMiddleware, adminMiddleware, accountControllers.listAccounts);
-
+  
 
 // especificas  
 
@@ -22,8 +22,8 @@ router.get("/number/:accountNumber", authMiddleware, adminMiddleware, accountCon
 
 
 // especiais (id)
-router.get("/balance", authMiddleware, accountControllers.getBalanceAccount);
-router.get(":id/balance", authMiddleware, adminMiddleware, accountControllers.getBalanceAccount);
+
+router.get("/:id/balance", authMiddleware, accountControllers.getBalanceAccount);
 
 router.get("/:id", authMiddleware, adminMiddleware, accountControllers.getAccountByID);
 

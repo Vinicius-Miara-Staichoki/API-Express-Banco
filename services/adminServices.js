@@ -12,7 +12,7 @@ const deactivateUser = async (id) => {
         error.statusCode = 400;
         throw error;
 
-    }
+    }  
 
     const user = await User.findByIdAndUpdate(id,
         { active: false },

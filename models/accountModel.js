@@ -48,7 +48,7 @@ const AccountSchema = new mongoose.Schema(
             default: 0  
         },
 
-        active: {
+        active: {  
             type: Boolean,
             required: true,  
             trim: true,
